@@ -108,13 +108,19 @@ export default function HomePage() {
   // JSON 読み込み（インポート）
   // -----------------------------
   const importJSON = (file: File) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const data = JSON.parse(e.target.result);
-      setTables(data);
-    };
-    reader.readAsText(file);
+  const reader = new FileReader();
+
+  reader.onload = (e: ProgressEvent<FileReader>) => {
+    const text = e.target?.result as string | null;
+    if (!text) return; // null の場合はここで終了
+
+    const data = JSON.parse(text);
+    setTables(data);
   };
+
+  reader.readAsText(file);
+};
+
 
   // -----------------------------
   // テーブル操作
@@ -244,7 +250,11 @@ export default function HomePage() {
       <input
         type="file"
         accept="application/json"
-        onChange={(e) => importJSON(e.target.files[0])}
+        onChange={(e) => {
+          if (e.target.files && e.target.files.length > 0) {
+            importJSON(e.target.files[0]);
+          }
+        }}
         style={{ marginLeft: 16 }}
       />
 
