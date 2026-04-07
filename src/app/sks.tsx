@@ -107,7 +107,7 @@ export default function HomePage() {
   // -----------------------------
   // JSON 読み込み（インポート）
   // -----------------------------
-  const importJSON = (file) => {
+  const importJSON = (file: File) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const data = JSON.parse(e.target.result);
