@@ -109,10 +109,14 @@ export default function HomePage() {
   // -----------------------------
   const importJSON = (file) => {
     const reader = new FileReader();
-    reader.onload = (e) => {
-      const data = JSON.parse(e.target.result);
-      setTables(data);
-    };
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+  const text = e.target?.result as string | null;
+  if (!text) return;
+
+  const data = JSON.parse(text);
+  setTables(data);
+};
+
     reader.readAsText(file);
   };
 
@@ -244,7 +248,13 @@ export default function HomePage() {
       <input
         type="file"
         accept="application/json"
-        onChange={(e) => importJSON(e.target.files[0])}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+       if (!files || files.length === 0) return;
+
+        importJSON(files[0]);
+      }}
+
         style={{ marginLeft: 16 }}
       />
 
